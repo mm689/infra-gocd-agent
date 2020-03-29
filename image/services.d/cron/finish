@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "cron/finish: cron service was stopped"

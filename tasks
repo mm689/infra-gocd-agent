@@ -1,0 +1,64 @@
+#!/bin/bash
+
+set -Eeo pipefail
+
+KUDU_SERVICE="docker-kudu-gocd-agent"
+
+RELEASER_VERSION="2.1.2"
+DOCKER_OPS_VERSION="2.0.1"
+SECRET_OPS_VERSION="0.8.0"
+
+SECRET_OPS_FILE="ops/secret-ops"
+SECRET_OPS_TAR_FILE="ops/secret-ops-${SECRET_OPS_VERSION}.tar.gz"
+RELEASER_FILE="ops/releaser-${RELEASER_VERSION}"
+DOCKER_OPS_FILE="ops/docker-ops-${DOCKER_OPS_VERSION}"
+
+mkdir -p ops
+if [[ ! -f $RELEASER_FILE ]];then
+  wget --quiet -O $RELEASER_FILE https://github.com/kudulab/releaser/releases/download/${RELEASER_VERSION}/releaser
+fi
+source $RELEASER_FILE
+if [[ ! -f $DOCKER_OPS_FILE ]];then
+  wget --quiet -O $DOCKER_OPS_FILE https://github.com/kudulab/docker-ops/releases/download/${DOCKER_OPS_VERSION}/docker-ops
+fi
+source $DOCKER_OPS_FILE
+if [[ ! -f $SECRET_OPS_TAR_FILE ]];then
+  wget --quiet -O $SECRET_OPS_TAR_FILE https://github.com/kudulab/secret-ops/releases/download/${SECRET_OPS_VERSION}/secret-ops.tar.gz
+  tar -xf $SECRET_OPS_TAR_FILE -C ops
+fi
+source $SECRET_OPS_FILE
+
+image_name="kudulab/gocd-agent"
+image_registry="dockerhub"
+image_dir="./image"
+imagerc_filename="imagerc"
+
+function docker_login {
+  vault_user_path=$USER
+  if [ $vault_user_path == "go" ]; then
+    vault_user_path="gocd"
+  fi
+  dockerhub_user=$(vault read -field=user secret/$vault_user_path/dockerhub)
+  vault read -field=password secret/$vault_user_path/dockerhub | docker login --username $dockerhub_user --password-stdin
+}
+
+command="$1"
+set +u
+case "${command}" in
+  set_version)
+      set +u
+      releaser::bump_changelog_version "$2" "$3"
+      ;;
+  verify_version)
+      releaser::verify_release_ready
+      ;;
+  build_local)
+      image_tag=$(git rev-parse HEAD)
+      # build image and push to a test registry
+      docker_ops::docker_build "${image_dir}" "${imagerc_filename}" "${image_name}" "${image_tag}" "${image_registry}"
+      ;;
+  *)
+      echo "Invalid command: '${command}'"
+      exit 1
+      ;;
+esac

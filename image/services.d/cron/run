@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo -e "\e[32m$(date "+%d-%m-%Y %T") Starting cron\e[0m"
+# http://manpages.ubuntu.com/manpages/xenial/en/man8/cron.8.html
+exec cron -f -L 8 2>&1

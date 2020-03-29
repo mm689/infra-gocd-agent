@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# executed everytime the run script dies. Generally, its main purpose is to
+# clean up non-volatile data such as the filesystem after the supervised process
+# has been killed
+# http://skarnet.org/software/s6/servicedir.html
+
+echo "go-agent/finish: go-agent service was stopped"
+
+# Without this, if a service exits, it will be restarted inside a docker container.
+# With this, the container will be stopped.
+# https://github.com/just-containers/s6-overlay#writing-an-optional-finish-script
+s6-svscanctl -t /var/run/s6/services

@@ -1,0 +1,17 @@
+[user]
+  name = Go
+  email = go@kudulab.io
+
+[alias]
+  co = checkout
+  ci = commit
+  rb = rebase
+  st = status
+
+[color]
+  status = auto
+  branch = auto
+  ui = auto
+
+[push]
+  default = matching
