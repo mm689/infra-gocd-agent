@@ -1,0 +1,22 @@
+format_version: 5
+pipelines:
+  infra-gocd-agent:
+    group: infra
+    label_template: "${git[:8]}"
+    materials:
+      git:
+        type: configrepo
+    environment_variables:
+      AWS_ACCESS_KEY_ID: AKIA5G2AKNTSNENMAU6Z
+    secure_variables:
+      AWS_SECRET_ACCESS_KEY: "AES:g59K4IT1d4/zNeXfMNl1Pg==:dTJgdXqmIkHzL07B5Dq3hN/E5k7m9uPNlRV+jLPLHm1TPLxav9yUre26PBiEF/xo"
+    stages:
+      - build:
+          clean_workspace: true
+          jobs:
+            build:
+              tasks:
+               - exec:
+                   command: make
+                   arguments:
+                     - build

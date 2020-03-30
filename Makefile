@@ -1,5 +1,5 @@
 
-run: need-aws-credentials
+build: need-aws-credentials
 	./tasks build
 
 
