@@ -44,17 +44,17 @@ ENV DOCKER_OPTS="--storage-driver overlay2"
 
 ENV TERM="xterm"
 
-COPY go-identity /var/go/
+COPY go-identity /home/go/
 COPY ssh_config /etc/ssh/ssh_config
 # Go uid should be 1000 for efficiency.
 RUN userdel go &&\
   groupadd go --gid 1000 &&\
-  useradd go --uid 1000 --gid 1000 --home /var/go --shell /bin/bash --password "$1$JJsvHslasdfjVEroftprNn4JHtDi" &&\
-  mkdir -p /var/go && chmod 0755 /var/go &&\
-  mkdir -p /var/go/.ssh && chmod 0700 /var/go/.ssh &&\
-  chmod 0755 /var/go/.bashrc /var/go/.bashrc.d /var/go/.profile &&\
-  chmod 0600 /var/go/.bashrc.d/* &&\
-  chown go:go -R /var/go &&\
+  useradd go --uid 1000 --gid 1000 --home /home/go --shell /bin/bash --password "$1$JJsvHslasdfjVEroftprNn4JHtDi" &&\
+  mkdir -p /home/go && chmod 0755 /home/go &&\
+  mkdir -p /home/go/.ssh && chmod 0700 /home/go/.ssh &&\
+  chmod 0755 /home/go/.bashrc /home/go/.bashrc.d /home/go/.profile &&\
+  chmod 0600 /home/go/.bashrc.d/* &&\
+  chown go:go -R /home/go &&\
   usermod -aG docker go
 
 # Add all the services
