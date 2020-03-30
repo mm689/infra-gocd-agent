@@ -34,12 +34,27 @@ image_dir="./image"
 imagerc_filename="imagerc"
 
 function docker_login {
-  vault_user_path=$USER
-  if [ $vault_user_path == "go" ]; then
-    vault_user_path="gocd"
+  registry=$1
+  if [[ "$registry" == *.amazonaws.com ]]; then
+    aws_region=${AWS_REGION:-eu-west-1}
+    if command -v dojo; then
+      eval $(dojo -c Dojofile-aws "aws ecr get-login --no-include-email --region $aws_region" || echo "exit 1") \
+        || (echo "Need environment variables" >&2 && exit 1)
+    elif command -v aws; then
+      eval $(aws ecr get-login --no-include-email --region $aws_region || echo "exit 1")  \
+        || (echo "Need environment variables" >&2 && exit 1)
+    else
+      echo "Unable to access AWS command line. Try installing it or Dojo." >&2
+      exit 1
+    fi
+  else
+    vault_user_path=$USER
+    if [ $vault_user_path == "go" ]; then
+      vault_user_path="gocd"
+    fi
+    dockerhub_user=$(vault read -field=user secret/$vault_user_path/dockerhub)
+    vault read -field=password secret/$vault_user_path/dockerhub | docker login --username $dockerhub_user --password-stdin
   fi
-  dockerhub_user=$(vault read -field=user secret/$vault_user_path/dockerhub)
-  vault read -field=password secret/$vault_user_path/dockerhub | docker login --username $dockerhub_user --password-stdin
 }
 
 command="$1"
@@ -56,6 +71,11 @@ case "${command}" in
       image_tag=$(git rev-parse HEAD)
       # build image and push to a test registry
       docker_ops::docker_build "${image_dir}" "${imagerc_filename}" "${image_name}" "${image_tag}" "${image_registry}"
+      ;;
+  build)
+      docker_login ${image_registry}
+      ./tasks build_local
+      docker_ops::push "${image_dir}" "${imagerc_filename}"
       ;;
   *)
       echo "Invalid command: '${command}'"
