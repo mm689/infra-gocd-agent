@@ -6,7 +6,7 @@ USER root
 # Nano, curl is for humans administrating/experimenting.
 RUN apt-get update &&\
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends\
-  git tzdata wget curl ca-certificates nano cron tar zip unzip bzip2 sudo rsync apt-transport-https ssh-client &&\
+  git tzdata wget curl ca-certificates nano cron tar zip unzip bzip2 sudo rsync apt-transport-https ssh-client make &&\
   apt-get -y autoremove && apt-get -y autoclean && apt-get -y clean &&\
   rm -rf /tmp/* /var/tmp/* && rm -rf /var/lib/apt/lists/*
 
