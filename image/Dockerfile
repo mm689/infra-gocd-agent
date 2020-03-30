@@ -1,4 +1,4 @@
-ARG gocd_version=v20.2.0
+ARG gocd_version=v19.9.0
 FROM gocd/gocd-agent-ubuntu-18.04:$gocd_version
 
 USER root

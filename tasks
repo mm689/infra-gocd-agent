@@ -28,8 +28,8 @@ if [[ ! -f $SECRET_OPS_TAR_FILE ]];then
 fi
 source $SECRET_OPS_FILE
 
-image_name="kudulab/gocd-agent"
-image_registry="dockerhub"
+image_name="infra-gocd-agent"
+image_registry="907983613156.dkr.ecr.eu-west-1.amazonaws.com"
 image_dir="./image"
 imagerc_filename="imagerc"
 
