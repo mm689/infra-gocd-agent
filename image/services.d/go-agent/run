@@ -158,4 +158,4 @@ if [ "$1" = "${AGENT_WORK_DIR}/bin/go-agent" ]; then
   echo "set.AGENT_STARTUP_ARGS=%AGENT_STARTUP_ARGS% -Dgo.console.stdout=true %GOCD_AGENT_JVM_OPTS%" >> /go-agent/wrapper-config/wrapper-properties.conf
 fi
 
-sudo -E -u go bash -c '/go/bin/go-agent console'
+sudo -E -H -u go bash -c '/go/bin/go-agent console'
