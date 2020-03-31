@@ -63,7 +63,7 @@ if [ -z "$GOCD_SSH_KEY" ]; then
   GOCD_SSH_KEY=$(read_secret_or_die "go_id_rsa")
 fi
 
-echo "export AGENT_AUTO_REGISTER_KEY=${AGENT_AUTO_REGISTER_KEY}" >>${GOCD_HOME}/gocd_AGENT_AUTO_REGISTER_KEY
+echo "export AGENT_AUTO_REGISTER_KEY=${AGENT_AUTO_REGISTER_KEY}" >${GOCD_HOME}/gocd_AGENT_AUTO_REGISTER_KEY
 
 # quotes are required to keep multiline file
 mkdir -p ${GOCD_HOME}/.ssh/
