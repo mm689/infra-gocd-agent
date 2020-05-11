@@ -63,6 +63,7 @@ COPY run-on-start/* /etc/cont-init.d/
 
 # Setup periodic cleanup of containers and images
 COPY docker-gc.sh /usr/bin/docker-gc
+RUN chmod -c 755 /usr/bin/docker-gc
 COPY docker-gc.cron /etc/cron.d/docker-gc
 RUN chmod -c 644 /etc/cron.d/docker-gc && crontab
 

@@ -1,6 +1,6 @@
 # Kudulab's GoCD Agent Docker image
 
-This is a [GoCD agent](https://www.gocd.io) docker image based on offical [GoCD ubuntu 18.04 docker image](https://github.com/gocd/docker-gocd-agent-ubuntu-18.04).
+This is a [GoCD agent](https://www.gocd.io) docker image based on offical [GoCD ubuntu-18.04 docker image](https://github.com/gocd/docker-gocd-agent-ubuntu-18.04).
 
 It is an *opinionated* variant with several enhancements:
  * Uses [s6 for init system](https://github.com/just-containers/s6-overlay) in the container
