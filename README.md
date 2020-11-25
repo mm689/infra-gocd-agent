@@ -90,6 +90,14 @@ docker run -d \
 
 If the `AGENT_AUTO_REGISTER_*` variables are provided (we recommend that you do), then the agent will be automatically approved by the server. See the [auto registration docs](https://docs.gocd.org/20.2.0/advanced_usage/agent_auto_register.html) on the GoCD website.
 
+## Fast polling
+
+```
+docker run -d -e AGENT_FAST_POLLING=1 kudulab/gocd-agent
+```
+
+If the `AGENT_FAST_POLLING` variable is set to anything at all, the agent will poll the server for work much more frequently than the default settings. For use with a small agent fleet.
+
 ## Configuring SSL
 
 To configure SSL parameters, pass the parameters using the environment variable `AGENT_BOOTSTRAPPER_ARGS`. See [this documentation](https://docs.gocd.org/20.2.0/installation/ssl_tls/end_to_end_transport_security.html) for supported options.

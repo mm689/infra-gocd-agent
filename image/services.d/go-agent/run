@@ -59,6 +59,16 @@ setup_autoregister_properties_file() {
   fi
 }
 
+setup_poll_timing() {
+  sed -i $3 "/$1=/d"
+  echo "$1=$2" >> $3
+}
+
+setup_fast_poll_timings() {
+  setup_poll_timing agent.get.work.interval 1000 $1
+  setup_poll_timing agent.instruction.interval 1500 $1
+}
+
 AGENT_WORK_DIR="/go"
 GOCD_HOME="/home/go"
 
@@ -109,6 +119,11 @@ if [ "$1" = "${AGENT_WORK_DIR}/bin/go-agent" ]; then
   fi
 
   setup_autoregister_properties_file "${AGENT_WORK_DIR}/config/autoregister.properties"
+
+  # assuming a small agent fleet, poll more regularly for work
+  if [ ! -z "${AGENT_FAST_POLLING}" ]; then
+    setup_fast_poll_timings "${AGENT_WORK_DIR}/agent.properties"
+  fi
 
   yell "Running custom scripts in /docker-entrypoint.d/ ..."
 
